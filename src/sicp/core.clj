@@ -17,26 +17,23 @@
     (if (zero? n) acc
       (recur (* x acc) (dec n)))))
 
-(defn quotient [guess x base]
-  "Quotient for the Newton's method"
-  (/ x (exp guess (- base 1))))
-
-(defn improve [guess x base]
+(defn newton [guess x base]
   "Improve the root guess using Newton's method"
-  (/ (+ (quotient guess x base)
-        (* (- base 1) guess))
-     base))
+  (let [quotient (/ x (exp guess (- base 1)))
+        addition (* (- base 1) guess)]
+    (/ (+ quotient addition) base)))
 
-(defn good-enough? [guess x base]
-  "If the exponent of our guess is less than 0.001 of the x"
-  (< (abs (- (exp guess base) x)) 0.001))
+(defn difference [guess x base]
+  (abs (- (exp guess base) x)))
 
 (defn root [x base]
   "Calculates the root value for selected base"
-  (loop [guess 1, y x]
-    (if (good-enough? guess y base)
-      (float guess)
-      (recur (improve guess y base) y))))
+  (letfn [(good-enough? [guess x base]
+            (< (difference guess x base) 0.001))]
+    (loop [guess 1, y x]
+      (if (good-enough? guess y base)
+        (float guess)
+        (recur (newton guess y base) y)))))
 
 (defn sqrt [x]
   "Square root"
