@@ -1,3 +1,8 @@
 (use 'sicp.core)
 (sqrt 4)
 (root 4 2)
+(use 'sicp.core)
+(root 4 2)
+(root 4 3)
+(root 4 4)
+(root 4 10)
